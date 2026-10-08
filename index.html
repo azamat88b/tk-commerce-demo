@@ -108,7 +108,7 @@ kbd{font:500 11px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--l
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
-input[type=number],input[type=search],input[type=text],select{font:inherit;font-size:13.5px;color:var(--text);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:6px 10px;outline:none}
+input[type=number],input[type=search],input[type=text],input[type=email],select{font:inherit;font-size:13.5px;color:var(--text);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:6px 10px;outline:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-weak)}
 .search{position:relative;display:inline-flex;align-items:center}
 .search svg{position:absolute;left:10px;color:var(--faint)}
@@ -209,6 +209,28 @@ input.mk.custom{border-color:var(--accent);background:var(--accent-weak)}
 .empty h2{color:var(--text);font-size:18px;margin:0 0 6px;font-weight:600}
 .empty p{max-width:440px;margin:0 auto}
 
+/* ---------- settings: users ---------- */
+.u-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 16px}
+.u-form .field select,.u-form .field input{max-width:none;width:100%}
+.u-form .full{grid-column:1/-1}
+.pass{display:flex;gap:8px}
+.pass input{flex:1;min-width:0}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em}
+.err{color:var(--up);font-size:13px;margin:0;min-height:1em}
+.creds{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;padding:14px 16px;border-radius:10px;background:var(--bg);border:1px solid var(--line);margin:0 0 14px;font-size:14px;overflow-x:auto}
+.creds dt{color:var(--muted)}.creds dd{margin:0;font-weight:500}
+.ucell{display:flex;align-items:center;gap:10px}
+.ucell b{font-weight:500;display:block}
+.ucell small{color:var(--muted);font-size:12.5px}
+tr.off td{color:var(--faint)}
+.acts{display:inline-flex;gap:4px;justify-content:flex-end}
+.btn.danger{color:var(--up)}
+.btn.danger.armed{background:var(--up);border-color:var(--up);color:#fff}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:18px}
+.roles div{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.roles b{display:block;font-weight:600;margin-bottom:4px}
+.roles span{color:var(--muted);font-size:13px}
+
 /* ---------- palette, toast ---------- */
 .overlay{position:fixed;inset:0;z-index:50;background:rgba(10,12,16,.4);backdrop-filter:blur(2px);display:flex;justify-content:center;align-items:flex-start;padding:12vh 16px 16px}
 .palette{width:560px;max-width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden}
@@ -258,10 +280,10 @@ input.mk.custom{border-color:var(--accent);background:var(--accent-weak)}
     <nav class="nav" id="nav"></nav>
     <div class="sb-foot">
       <div class="nav" style="padding:0;overflow:visible">
-        <a href="#settings" data-v="settings" title="Настройки"><svg class="i" data-i="settings"></svg><span class="lbl">Настройки</span><span class="tagx">скоро</span></a>
+        <a href="#settings" data-v="settings" title="Настройки"><svg class="i" data-i="settings"></svg><span class="lbl">Настройки</span></a>
         <a href="#" id="theme" title="Тема"><svg class="i" data-i="moon"></svg><span class="lbl">Тёмная тема</span></a>
       </div>
-      <div class="user"><div class="ava">TK</div><div><b>Менеджер</b><span>Закупки и цены</span></div></div>
+      <div class="user"><div class="ava">TK</div><div><b>Администратор</b><span>Владелец аккаунта</span></div></div>
     </div>
   </aside>
   <div class="backdrop" id="backdrop"></div>
@@ -288,7 +310,7 @@ input.mk.custom{border-color:var(--accent);background:var(--accent-weak)}
           <div class="card"><div class="card-h"><h2>Быстрые действия</h2></div>
             <ul class="list">
               <li><span class="ic acc"><svg class="i" data-i="trend"></svg></span><div style="flex:1"><a href="#price-update" style="color:inherit;text-decoration:none"><b>Обновить цены</b></a><small>Загрузить новый прайс поставщика</small></div></li>
-              <li><span class="ic"><svg class="i" data-i="file"></svg></span><div style="flex:1"><a href="#pricelists" style="color:inherit;text-decoration:none"><b>Прайс-листы</b></a><small>Скачать прайсы покупателям</small></div></li>
+              <li><span class="ic"><svg class="i" data-i="users"></svg></span><div style="flex:1"><a href="#buyers" style="color:inherit;text-decoration:none"><b>Покупатели</b></a><small>Наценки и прайсы покупателям</small></div></li>
               <li><span class="ic"><svg class="i" data-i="box"></svg></span><div style="flex:1"><a href="#products" style="color:inherit;text-decoration:none"><b>Каталог товаров</b></a><small>Закупочные цены и наценки</small></div></li>
             </ul>
           </div>
@@ -320,12 +342,6 @@ input.mk.custom{border-color:var(--accent);background:var(--accent-weak)}
         <div class="card"><div class="tbl-wrap" style="border-top:0"><table>
           <thead><tr><th>Поставщик</th><th>Позиций</th><th class="l">Последний прайс</th><th class="l">Статус</th><th></th></tr></thead>
           <tbody id="s-body"></tbody></table></div></div>
-      </section>
-
-      <!-- ===== Прайс-листы ===== -->
-      <section class="view" id="v-pricelists">
-        <div class="ph"><div class="grow"><h1>Прайс-листы</h1><p>Excel для каждого покупателя: в его названиях товаров, цены округлены до 1 ₸.</p></div></div>
-        <div class="pl-grid" id="pl-grid"></div>
       </section>
 
       <!-- ===== Обновление цен ===== -->
@@ -394,6 +410,37 @@ input.mk.custom{border-color:var(--accent);background:var(--accent-weak)}
           <div class="pl-grid" id="downloads"></div>
           <div class="actionbar"><button class="btn ghost" data-go="2"><svg class="i" data-i="left"></svg>К предпросмотру</button><span class="sp"></span><a class="btn" href="#home">На главную</a></div>
         </section>
+      </section>
+
+      <!-- ===== Настройки ===== -->
+      <section class="view" id="v-settings">
+        <div class="ph"><div class="grow"><h1>Пользователи</h1><p>Кто входит в систему и что может делать. Логин — рабочая почта, пароль генерируется автоматически.</p></div>
+          <button class="btn primary" id="u-add"><svg class="i" data-i="plus"></svg>Добавить пользователя</button></div>
+
+        <div class="card hidden" id="u-form-card">
+          <div class="card-h"><div><h2>Новый пользователь</h2><p>После создания система покажет логин и пароль — передайте их сотруднику.</p></div></div>
+          <form class="card-b u-form" id="u-form" novalidate>
+            <div class="field"><label for="u-email">Почта (логин)</label><input type="email" id="u-email" placeholder="name@company.kz" autocomplete="off"></div>
+            <div class="field"><label for="u-name">Имя</label><input type="text" id="u-name" placeholder="Например, Айгерим" autocomplete="off"></div>
+            <div class="field"><label for="u-role">Роль</label><select id="u-role"></select></div>
+            <div class="field"><label for="u-pass">Пароль</label><div class="pass"><input type="text" id="u-pass" class="mono" readonly><button type="button" class="btn" id="u-gen" title="Сгенерировать заново"><svg class="i" data-i="refresh"></svg></button></div></div>
+            <div class="row full"><button class="btn primary" type="submit">Создать пользователя</button><button class="btn ghost" type="button" id="u-cancel">Отмена</button><p class="err" id="u-err"></p></div>
+          </form>
+        </div>
+
+        <div id="u-creds"></div>
+
+        <div class="card">
+          <div class="card-h"><h2>Все пользователи</h2><span class="sp"></span><span class="muted" id="u-count"></span></div>
+          <div class="tbl-wrap" style="border-top:0"><table style="min-width:660px">
+            <thead><tr><th>Пользователь</th><th class="l">Роль</th><th class="l">Статус</th><th class="l">Добавлен</th><th></th></tr></thead>
+            <tbody id="u-body"></tbody></table></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2>Роли</h2></div>
+          <div class="roles" id="u-roles"></div>
+        </div>
       </section>
 
       <!-- ===== Скоро ===== -->
@@ -469,53 +516,49 @@ const ICONS = {
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
   plus:'<path d="M5 12h14M12 5v14"/>',
+  refresh:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  copy:'<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  key:'<circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/>',
 };
 const ic = (n,cls='') => `<svg class="i ${cls}" viewBox="0 0 24 24">${ICONS[n]}</svg>`;
 function paintIcons(root=document){ root.querySelectorAll('svg.i[data-i]').forEach(s=>{ s.setAttribute('viewBox','0 0 24 24'); s.innerHTML=ICONS[s.dataset.i]; s.removeAttribute('data-i') }) }
 
 // --- navigation ----------------------------------------------------------------
 const NAV = [
-  {g:null, items:[{id:'home', label:'Обзор', icon:'home'}]},
-  {g:'Продажи', items:[
-    {id:'orders', label:'Заказы', icon:'clipboard', soon:'Приём заказов от покупателей, статусы отгрузки и история по каждому клиенту.'},
-    {id:'buyers', label:'Покупатели', icon:'users'},
-    {id:'pricelists', label:'Прайс-листы', icon:'file'}]},
-  {g:'Закупки', items:[
-    {id:'suppliers', label:'Поставщики', icon:'truck'},
-    {id:'price-update', label:'Обновление цен', icon:'trend'},
-    {id:'purchase', label:'Заказы поставщикам', icon:'cart', soon:'Формирование заявок поставщикам по остаткам и заказам покупателей.'}]},
-  {g:'Каталог', items:[
-    {id:'products', label:'Товары', icon:'box'},
-    {id:'stock', label:'Склад', icon:'warehouse', soon:'Остатки, приход и расход, списания и инвентаризация.'}]},
-  {g:'Финансы', items:[
-    {id:'payments', label:'Платежи', icon:'wallet', soon:'Дебиторка покупателей, оплаты поставщикам и сверка взаиморасчётов.'},
-    {id:'reports', label:'Отчёты', icon:'chart', soon:'Маржа по товарам и покупателям, динамика закупочных цен.'}]},
+  {id:'home', label:'Обзор', icon:'home'},
+  {id:'orders', label:'Заказы', icon:'clipboard', soon:'Приём заказов от покупателей, статусы отгрузки и история по каждому клиенту.'},
+  {id:'products', label:'Товары', icon:'box'},
+  {id:'buyers', label:'Покупатели', icon:'users'},
+  {id:'suppliers', label:'Поставщики', icon:'truck'},
+  {id:'reports', label:'Отчёты', icon:'chart', soon:'Маржа по товарам и покупателям, динамика закупочных цен.'},
 ];
-const EXTRA = {settings:{id:'settings', label:'Настройки', icon:'settings', soon:'Пользователи и роли, реквизиты компании, правила округления и порог скачка цен.'}};
-const ALL = [...NAV.flatMap(s=>s.items.map(it=>({...it, g:s.g}))), {...EXTRA.settings, g:null}];
+// reachable from pages and search, not listed in the sidebar
+const HIDDEN = [
+  {id:'price-update', label:'Обновление цен', icon:'trend', parent:'suppliers'},
+  {id:'settings', label:'Настройки', icon:'settings'},
+];
+const ALL = [...NAV, ...HIDDEN].map(it=>({...it, g: it.parent ? NAV.find(n=>n.id===it.parent).label : null}));
 
 function renderNav(){
-  $('nav').innerHTML = NAV.map((s,i)=>
-    (s.g ? `<div class="nav-g">${s.g}</div>` : '') + (i>0 ? '<div class="nav-sep"></div>' : '') +
-    s.items.map(it=>{
-      const extra = it.soon ? '<span class="tagx">скоро</span>' : (it.id==='price-update' && !published ? '<span class="cnt">1</span>' : '');
-      return `<a href="#${it.id}" data-v="${it.id}" title="${it.label}" class="${it.soon?'soon':''}">${ic(it.icon)}<span class="lbl">${it.label}</span>${extra}</a>`;
-    }).join('')).join('');
+  $('nav').innerHTML = NAV.map(it=>{
+    const extra = it.soon ? '<span class="tagx">скоро</span>' : (it.id==='suppliers' && !published ? '<span class="cnt" title="Новый прайс">1</span>' : '');
+    return `<a href="#${it.id}" data-v="${it.id}" title="${it.label}" class="${it.soon?'soon':''}">${ic(it.icon)}<span class="lbl">${it.label}</span>${extra}</a>`;
+  }).join('');
 }
 
 function route(){
   const id = location.hash.slice(1) || 'home';
   const it = ALL.find(x=>x.id===id) || ALL[0];
   document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
-  document.querySelectorAll('.nav a[data-v]').forEach(a=>a.classList.toggle('on', a.dataset.v===it.id));
-  $('crumbs').innerHTML = (it.g ? `<span>${it.g}</span><span class="sl">/</span>` : '') + `<b>${it.label}</b>`;
+  document.querySelectorAll('.nav a[data-v]').forEach(a=>a.classList.toggle('on', a.dataset.v===(it.parent||it.id)));
+  $('crumbs').innerHTML = (it.parent ? `<a href="#${it.parent}" style="color:inherit;text-decoration:none">${it.g}</a><span class="sl">/</span>` : '') + `<b>${it.label}</b>`;
   document.title = `${it.label} · TK Commerce`;
   if (it.soon){
     $('soon-ic').innerHTML = ic(it.icon); $('soon-t').textContent = it.label; $('soon-d').textContent = it.soon;
     $('v-soon').classList.remove('hidden');
   } else {
     $('v-'+it.id).classList.remove('hidden');
-    ({home:renderHome, products:renderProducts, buyers:renderBuyers, suppliers:renderSuppliers, pricelists:renderPricelists})[it.id]?.();
+    ({home:renderHome, products:renderProducts, buyers:renderBuyers, suppliers:renderSuppliers, settings:renderUsers})[it.id]?.();
   }
   $('app').classList.remove('drawer');
   $('main').scrollTop = 0;
@@ -537,7 +580,7 @@ function applyTheme(t){
 let isDark = applyTheme(store('tk-theme'));
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store('tk-theme')) isDark=applyTheme() });
 $('theme').onclick = e => { e.preventDefault(); const t=isDark?'light':'dark'; store('tk-theme',t); isDark=applyTheme(t) };
-$('bell').onclick = () => location.hash = published ? 'pricelists' : 'price-update';
+$('bell').onclick = () => location.hash = published ? 'buyers' : 'price-update';
 
 // command palette
 let palSel = 0;
@@ -576,7 +619,7 @@ function renderHome(){
   $('hello').textContent = h<5?'Доброй ночи':h<12?'Доброе утро':h<18?'Добрый день':'Добрый вечер';
   $('today').textContent = new Date().toLocaleDateString('ru-RU',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
   $('home-callout').innerHTML = published
-    ? `<div class="callout"><div class="ic">${ic('check')}</div><div class="grow"><h3>Цены обновлены</h3><p>Прайсы покупателям готовы к отправке.</p></div><a class="btn primary" href="#pricelists">${ic('download')}Прайс-листы</a></div>`
+    ? `<div class="callout"><div class="ic">${ic('check')}</div><div class="grow"><h3>Цены обновлены</h3><p>Прайсы покупателям готовы к отправке.</p></div><a class="btn primary" href="#buyers">${ic('download')}Прайс-листы</a></div>`
     : `<div class="callout"><div class="ic">${ic('sheet')}</div><div class="grow"><h3>Новый прайс поставщика ЛФ от 23.09.2026</h3><p>${DATA.file.length} позиций. Нужно сверить товары и пересчитать цены для покупателей.</p></div><a class="btn primary" href="#price-update">Обработать${ic('right')}</a></div>`;
   const gmMk = catalog.filter(p=>p.mk.gm!=null).map(p=>p.mk.gm);
   $('home-kpis').innerHTML = [
@@ -624,7 +667,6 @@ function plCards(){
     <div class="meta">${buyerItems(b).length} позиций · наценка ${b.def}%${b.fixed?' · свои названия':''}</div>
     <button class="btn" data-dl="${b.id}">${ic('download')}Скачать Excel</button></div>`).join('');
 }
-function renderPricelists(){ $('pl-grid').innerHTML = plCards(); bindDownloads($('pl-grid')) }
 function bindDownloads(root){ root.querySelectorAll('[data-dl]').forEach(btn=>btn.onclick=()=>download(btn.dataset.dl)) }
 
 // --- price update wizard: steps ----------------------------------------------------
@@ -821,6 +863,86 @@ async function download(id){
   else XLSX.writeFile(wb,filename);
   logAct(`Скачан прайс: ${b.name}`, 'download', '');
 }
+
+// --- settings: users ---------------------------------------------------------------
+// Prototype only: there is no server, so accounts live in this browser and passwords are never stored.
+const ROLES = {
+  admin:{name:'Администратор', d:'Всё, включая пользователей и настройки.'},
+  manager:{name:'Менеджер', d:'Товары, цены, покупатели и поставщики. Без управления пользователями.'},
+  viewer:{name:'Просмотр', d:'Смотрит данные и скачивает прайсы, ничего не меняет.'},
+};
+const today = () => new Date().toLocaleDateString('ru-RU');
+let users = (()=>{ try{ return JSON.parse(store('tk-users')) || null }catch(e){ return null } })()
+  || [{id:'u0', email:'admin@example.com', name:'Администратор', role:'admin', active:true, created:today(), you:true}];
+const saveUsers = () => store('tk-users', JSON.stringify(users));
+
+function genPass(n=12){
+  const sets=['ABCDEFGHJKLMNPQRSTUVWXYZ','abcdefghijkmnpqrstuvwxyz','23456789','!@#$%*?'];   // no 0/O, 1/l/I look-alikes
+  const all=sets.join('');
+  const r=k=>{ const a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]%k };
+  const out=sets.map(s=>s[r(s.length)]);
+  while (out.length<n) out.push(all[r(all.length)]);
+  for (let i=out.length-1;i>0;i--){ const j=r(i+1); [out[i],out[j]]=[out[j],out[i]] }
+  return out.join('');
+}
+async function copyText(text, el){
+  try{ await navigator.clipboard.writeText(text); toast('Скопировано') }
+  catch(e){ const rg=document.createRange(); rg.selectNodeContents(el); getSelection().removeAllRanges(); getSelection().addRange(rg); toast('Текст выделен, нажмите ⌘C') }
+}
+function showCreds(u, pass, title){
+  const login = location.origin + location.pathname;
+  const text = `Вход в TK Commerce: ${login}\nЛогин: ${u.email}\nПароль: ${pass}`;
+  $('u-creds').innerHTML = `<div class="card" style="border-color:color-mix(in srgb,var(--down) 35%,var(--line))">
+    <div class="card-h"><div><h2>${esc(title)}</h2><p>Пароль показывается один раз. Скопируйте и отправьте сотруднику.</p></div></div>
+    <div class="card-b"><dl class="creds" id="u-creds-box"><dt>Вход</dt><dd>${esc(login)}</dd><dt>Логин</dt><dd>${esc(u.email)}</dd><dt>Пароль</dt><dd class="mono">${esc(pass)}</dd></dl>
+      <div class="row"><button class="btn primary" id="u-copy">${ic('copy')}Скопировать данные для входа</button><button class="btn ghost" id="u-done">Готово</button></div></div></div>`;
+  $('u-copy').onclick = () => copyText(text, $('u-creds-box'));
+  $('u-done').onclick = () => $('u-creds').innerHTML = '';
+  $('main').scrollTop = 0;
+}
+
+function renderUsers(){
+  $('u-role').innerHTML = Object.entries(ROLES).map(([k,r])=>`<option value="${k}" ${k==='manager'?'selected':''}>${r.name}</option>`).join('');
+  $('u-roles').innerHTML = Object.values(ROLES).map(r=>`<div><b>${r.name}</b><span>${r.d}</span></div>`).join('');
+  const act = users.filter(u=>u.active).length;
+  $('u-count').textContent = `${users.length} всего · ${act} активных`;
+  $('u-body').innerHTML = users.map(u=>`<tr class="${u.active?'':'off'}">
+    <td><div class="ucell"><span class="ava">${esc((u.name||u.email).slice(0,2).toUpperCase())}</span><div><b>${esc(u.name||'Без имени')}${u.you?' <span class="badge">вы</span>':''}</b><small>${esc(u.email)}</small></div></div></td>
+    <td class="l">${u.you ? ROLES[u.role].name : `<select data-role="${u.id}" style="padding:4px 8px">${Object.entries(ROLES).map(([k,r])=>`<option value="${k}" ${k===u.role?'selected':''}>${r.name}</option>`).join('')}</select>`}</td>
+    <td class="l">${u.active?'<span class="badge ok dot">Активен</span>':'<span class="badge dot">Отключён</span>'}</td>
+    <td class="l muted">${esc(u.created)}</td>
+    <td><div class="acts">
+      <button class="btn sm" data-reset="${u.id}" title="Сгенерировать новый пароль">${ic('key')}Пароль</button>
+      ${u.you?'':`<button class="btn sm ghost" data-toggle="${u.id}">${u.active?'Отключить':'Включить'}</button>
+      <button class="btn sm ghost danger" data-del="${u.id}">Удалить</button>`}
+    </div></td></tr>`).join('');
+  const byId = id => users.find(u=>u.id===id);
+  $('u-body').querySelectorAll('[data-role]').forEach(s=>s.onchange=()=>{ byId(s.dataset.role).role=s.value; saveUsers(); toast(`Роль: ${ROLES[s.value].name}`) });
+  $('u-body').querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>{ const u=byId(b.dataset.reset); showCreds(u, genPass(), `Новый пароль для ${u.email}`); logAct(`Сброшен пароль: ${u.email}`, 'key', 'acc') });
+  $('u-body').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{ const u=byId(b.dataset.toggle); u.active=!u.active; saveUsers(); renderUsers(); toast(u.active?'Доступ включён':'Доступ отключён') });
+  $('u-body').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    if (!b.classList.contains('armed')){ b.classList.add('armed'); b.textContent='Точно удалить?'; setTimeout(()=>{ if (b.isConnected){ b.classList.remove('armed'); b.textContent='Удалить' } },4000); return }
+    const u=byId(b.dataset.del); users=users.filter(x=>x!==u); saveUsers(); renderUsers(); toast(`Удалён: ${u.email}`); logAct(`Удалён пользователь: ${u.email}`, 'users', '');
+  });
+}
+function openUserForm(open){
+  $('u-form-card').classList.toggle('hidden', !open);
+  if (open){ $('u-form').reset(); renderUsers(); $('u-pass').value=genPass(); $('u-err').textContent=''; $('u-creds').innerHTML=''; $('u-email').focus() }
+}
+$('u-add').onclick = () => openUserForm(true);
+$('u-cancel').onclick = () => openUserForm(false);
+$('u-gen').onclick = () => { $('u-pass').value = genPass() };
+$('u-form').onsubmit = e => {
+  e.preventDefault();
+  const email=$('u-email').value.trim().toLowerCase(), name=$('u-name').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ $('u-err').textContent='Введите почту в формате name@company.kz'; $('u-email').focus(); return }
+  if (users.some(u=>u.email===email)){ $('u-err').textContent='Пользователь с такой почтой уже есть'; $('u-email').focus(); return }
+  const u={id:'u'+Date.now(), email, name, role:$('u-role').value, active:true, created:today()};
+  const pass=$('u-pass').value;
+  users.push(u); saveUsers(); openUserForm(false); renderUsers();
+  showCreds(u, pass, `Пользователь ${email} создан`);
+  logAct(`Добавлен пользователь: ${email}`, 'users', 'acc');
+};
 
 // --- boot --------------------------------------------------------------------
 paintIcons(); renderNav(); step(0); route();
